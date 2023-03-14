@@ -3,6 +3,9 @@ const dotenv = require( 'dotenv' )
 const mongoose = require( 'mongoose' )
 const cors = require( 'cors' )
 
+const authRoutes = require('./routes/auth')
+const newUserRoutes = require('./routes/newUser')
+
 /* CONFIGURATIONS */
 const app = express()
 
@@ -10,6 +13,10 @@ dotenv.config()
 
 app.use( cors() )
 app.use( express.json() )
+
+/* ROUTES */
+app.use('/auth', authRoutes)
+app.use('/new-users', newUserRoutes)
 
 /* MONGOOSE SETUP */
 const PORT = process.env.PORT || 6001
