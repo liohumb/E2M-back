@@ -92,15 +92,13 @@ router.post( '/inscription', async ( req, res ) => {
 /* LOGIN */
 router.post( '/connexion', async ( req, res ) => {
     try {
-        const {email, password} = req.body
-
-        const user = await User.findOne({email: email})
+        const user = await User.findOne({email: req.body.email})
         !user && res.status(400).json({message: 'Utilisateur inconnue'})
 
-        const isMatch = await bcrypt.compare(password, user.password)
+        const isMatch = await bcrypt.compare(req.body.password, user.password)
         !isMatch && res.status(400).json({message: 'Mot de passe incorrect'})
 
-        const { token, ...others} = user._doc
+        const { password, ...others} = user._doc
 
         res.status(200).json(others)
     } catch (e) {
