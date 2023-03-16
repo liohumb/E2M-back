@@ -66,7 +66,7 @@ router.delete( '/:id', async ( req, res ) => {
 
         if (post.author === req.body.user._id) {
             try {
-                await past.delete()
+                await post.delete()
                 res.status( 200 ).json( { message: 'Le post à bien été supprimé' } )
             } catch (e) {
                 res.status( 500 ).json( { e: e.message } )

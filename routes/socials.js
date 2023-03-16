@@ -66,25 +66,10 @@ router.put( '/:id', async ( req, res ) => {
 /* DELETE */
 router.delete( '/:id', async ( req, res ) => {
     try {
-        const social = await Social.findById( req.params.id )
-
-        if (!req.user || !req.user._id) {
-            res.status( 401 ).json( { message: 'Authentification requise' } )
-            return
-        }
-
-        if (social.user.toString() === req.user._id.toString()) {
-            try {
-                await social.delete()
-                res.status( 200 ).json( { message: 'L\'élément Social a bien été supprimé' } )
-            } catch (e) {
-                res.status( 500 ).json( { e: e.message } )
-            }
-        } else {
-            res.status( 401 ).json( { message: 'Vous ne pouvez pas supprimer un élément Social qui n\'est pas lié à votre compte' } )
-        }
+        const social = await Social.findByIdAndDelete( req.params.id )
+        res.status( 200 ).json( { message: 'Le réseau social a bien été supprimé' } )
     } catch (e) {
-        res.status( 500 ).json( { e: e.message } )
+        res.status( 500 ).json( { message: e.message } )
     }
 } )
 
