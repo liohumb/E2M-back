@@ -41,6 +41,10 @@ const UserSchema = new mongoose.Schema( {
         {
             type: String
         },
+    activity:
+        {
+            type: String
+        },
     picture:
         {
             type: String,
