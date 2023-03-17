@@ -41,6 +41,10 @@ const UserSchema = new mongoose.Schema( {
         {
             type: String
         },
+    city:
+        {
+            type: String
+        },
     activity:
         {
             type: String
@@ -54,6 +58,10 @@ const UserSchema = new mongoose.Schema( {
         {
             type: String,
             default: ''
+        },
+    description:
+        {
+            type: String
         },
     artisans:
         {
