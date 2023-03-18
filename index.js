@@ -3,14 +3,15 @@ const dotenv = require( 'dotenv' )
 const mongoose = require( 'mongoose' )
 const cors = require( 'cors' )
 const multer = require( 'multer' )
-const path = require('path')
+const path = require( 'path' )
 
 const authRoutes = require( './routes/auth' )
 const newUserRoutes = require( './routes/newUser' )
 const postRoutes = require( './routes/posts' )
+const productRoutes = require( './routes/products' )
 const userRoutes = require( './routes/users' )
-const socialRoutes = require('./routes/socials')
-const activityRoutes = require('./routes/activities')
+const socialRoutes = require( './routes/socials' )
+const activityRoutes = require( './routes/activities' )
 
 /* CONFIGURATIONS */
 const app = express()
@@ -35,15 +36,16 @@ const upload = multer( { storage: storage } )
 app.use( '/upload', upload.single( 'file' ), ( req, res ) => {
     res.status( 200 ).json( { message: 'L\'image a bien été enregistré' } )
 } )
-app.use('/images', express.static(path.join(__dirname, '/images')))
+app.use( '/images', express.static( path.join( __dirname, '/images' ) ) )
 
 /* ROUTES */
 app.use( '/auth', authRoutes )
 app.use( '/new-user', newUserRoutes )
 app.use( '/post', postRoutes )
+app.use( '/product', productRoutes )
 app.use( '/user', userRoutes )
-app.use('/social', socialRoutes)
-app.use('/activity', activityRoutes)
+app.use( '/social', socialRoutes )
+app.use( '/activity', activityRoutes )
 
 /* MONGOOSE SETUP */
 const PORT = process.env.PORT || 6001
