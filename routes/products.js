@@ -39,25 +39,34 @@ router.put( '/:id', async ( req, res ) => {
     const updatedProduct = req.body
 
     try {
-        const product = await Product.findByIdAndUpdate( id, updatedProduct, {
-            new: true,
-            useFindAndModify: false
-        } )
+        let product = await Product.findById( id )
 
         if (!product) {
             res.status( 404 ).json( { message: 'Produit introuvable' } )
         } else {
-            res.status( 200 ).json( product )
+            if (updatedProduct.removeUser) {
+                product.users = product.users.filter( ( userId ) => userId.toString() !== updatedProduct.removeUser )
+                delete updatedProduct.removeUser
+            } else if (updatedProduct.users) {
+                product.users.push( updatedProduct.users )
+                delete updatedProduct.users
+            }
+
+            Object.assign( product, updatedProduct )
+
+            const updated = await product.save()
+            res.status( 200 ).json( updated )
         }
     } catch (e) {
         res.status( 500 ).json( { e: e.message } )
     }
 } )
 
+
 /* DELETE */
 router.delete( '/:id', async ( req, res ) => {
     try {
-        const product = await Product.findByIdAndDelete( req.params.id )
+        await Product.findByIdAndDelete( req.params.id )
         res.status( 200 ).json( { message: 'Le produit a bien été supprimé' } )
     } catch (e) {
         res.status( 500 ).json( { e: e.message } )

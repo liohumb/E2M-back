@@ -10,8 +10,10 @@ const newUserRoutes = require( './routes/newUser' )
 const postRoutes = require( './routes/posts' )
 const productRoutes = require( './routes/products' )
 const userRoutes = require( './routes/users' )
+const commentRoutes = require('./routes/comments')
 const socialRoutes = require( './routes/socials' )
 const activityRoutes = require( './routes/activities' )
+const searchRoutes = require('./routes/search')
 
 /* CONFIGURATIONS */
 const app = express()
@@ -44,8 +46,10 @@ app.use( '/new-user', newUserRoutes )
 app.use( '/post', postRoutes )
 app.use( '/product', productRoutes )
 app.use( '/user', userRoutes )
+app.use('/comment', commentRoutes)
 app.use( '/social', socialRoutes )
 app.use( '/activity', activityRoutes )
+app.use('/search', searchRoutes)
 
 /* MONGOOSE SETUP */
 const PORT = process.env.PORT || 6001

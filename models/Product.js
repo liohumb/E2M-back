@@ -22,6 +22,11 @@ const ProductSchema = new mongoose.Schema( {
         {
             type: String,
             required: true
+        },
+    users:
+        {
+            type: Array,
+            default: []
         }
 }, { timestamps: true } )
 

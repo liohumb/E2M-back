@@ -36,23 +36,27 @@ router.get( '/', async ( req, res ) => {
 
 /* UPDATE */
 router.put( '/:id', async ( req, res ) => {
+    const { id } = req.params
+    const updatedPost = req.body
+
     try {
-        const post = await Post.findById( req.params.id )
+        let post = await Post.findById( id )
 
-        if (post.author === req.body.user._id) {
-            try {
-                const updatedPost = await Post.findByIdAndUpdate(
-                    req.params.id,
-                    { $set: req.body },
-                    { new: true }
-                )
-
-                res.status( 200 ).json( updatedPost )
-            } catch (e) {
-                res.status( 500 ).json( { e: e.message } )
-            }
+        if (!post) {
+            res.status( 404 ).json( { message: 'Produit introuvable' } )
         } else {
-            res.status( 401 ).json( { message: 'Vous ne pouvez pas modifier un post qui n\'est pas le votre' } )
+            if (updatedPost.removeUser) {
+                post.users = post.users.filter( ( userId ) => userId.toString() !== updatedPost.removeUser )
+                delete updatedPost.removeUser
+            } else if (updatedPost.users) {
+                post.users.push( updatedPost.users )
+                delete updatedPost.users
+            }
+
+            Object.assign( post, updatedPost )
+
+            const updated = await post.save()
+            res.status( 200 ).json( updated )
         }
     } catch (e) {
         res.status( 500 ).json( { e: e.message } )
@@ -62,18 +66,8 @@ router.put( '/:id', async ( req, res ) => {
 /* DELETE */
 router.delete( '/:id', async ( req, res ) => {
     try {
-        const post = await Post.findById( req.params.id )
-
-        if (post.author === req.body.user._id) {
-            try {
-                await post.delete()
-                res.status( 200 ).json( { message: 'Le post à bien été supprimé' } )
-            } catch (e) {
-                res.status( 500 ).json( { e: e.message } )
-            }
-        } else {
-            res.status( 401 ).json( { message: 'Vous ne pouvez pas supprimé un post que n\'est pas le votre' } )
-        }
+        await Post.findByIdAndDelete( req.params.id )
+        res.status( 200 ).json( { message: 'Le produit a bien été supprimé' } )
     } catch (e) {
         res.status( 500 ).json( { e: e.message } )
     }

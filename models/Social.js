@@ -9,7 +9,7 @@ const SocialSchema = new mongoose.Schema({
         {
             type: String
         },
-    user:
+    artisan:
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User'
