@@ -4,16 +4,20 @@ const mongoose = require( 'mongoose' )
 const cors = require( 'cors' )
 const multer = require( 'multer' )
 const path = require( 'path' )
+const ws = require( 'ws' )
+const http = require( 'http' )
 
 const authRoutes = require( './routes/auth' )
 const newUserRoutes = require( './routes/newUser' )
 const postRoutes = require( './routes/posts' )
 const productRoutes = require( './routes/products' )
 const userRoutes = require( './routes/users' )
-const commentRoutes = require('./routes/comments')
+const commentRoutes = require( './routes/comments' )
 const socialRoutes = require( './routes/socials' )
 const activityRoutes = require( './routes/activities' )
-const searchRoutes = require('./routes/search')
+const searchRoutes = require( './routes/search' )
+const chatRoutes = require( './routes/chat' )
+const messageRoutes = require( './routes/message' )
 
 /* CONFIGURATIONS */
 const app = express()
@@ -46,19 +50,33 @@ app.use( '/new-user', newUserRoutes )
 app.use( '/post', postRoutes )
 app.use( '/product', productRoutes )
 app.use( '/user', userRoutes )
-app.use('/comment', commentRoutes)
+app.use( '/comment', commentRoutes )
 app.use( '/social', socialRoutes )
 app.use( '/activity', activityRoutes )
-app.use('/search', searchRoutes)
+app.use( '/search', searchRoutes )
+app.use( '/chat', chatRoutes )
+app.use( '/message', messageRoutes )
 
 /* MONGOOSE SETUP */
 const PORT = process.env.PORT || 6001
 
 mongoose.set( 'strictQuery', true )
-mongoose.connect( process.env.MONGO_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-} ).then( console.log( 'La base de donnée MongoDB est connecté' ) )
+const httpServer = http.createServer( app )
+mongoose
+    .connect( process.env.MONGO_URL, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    } )
+    .then( console.log( 'La base de donnée MongoDB est connecté' ) )
     .then( () => {
-        app.listen( PORT, () => console.log( `Le serveur est en route => PORT: ${PORT}` ) )
-    } ).catch( ( error ) => console.log( `${error} connexion impossible` ) )
+        httpServer.listen( PORT, () => console.log( `Le serveur est en route => PORT: ${PORT}` ) )
+    } )
+    .catch( ( error ) => console.log( `${error} connexion impossible` ) )
+
+/* WEBSOCKET SERVER */
+const wss = new ws.Server( { server: httpServer } )
+
+wss.on( 'connection', ( connection, req ) => {
+    console.log( 'Websocket est en route' )
+    console.log( wss )
+} )
