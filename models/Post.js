@@ -18,6 +18,11 @@ const PostSchema = new mongoose.Schema( {
         {
             type: Array,
             default: []
+        },
+    sponsor:
+        {
+            type: Boolean,
+            default: false
         }
 }, { timestamps: true } )
 

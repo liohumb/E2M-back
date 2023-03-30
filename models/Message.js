@@ -1,15 +1,15 @@
 const mongoose = require('mongoose')
 
 const MessageSchema = new mongoose.Schema({
-    chat:
+    chatId:
         {
             type: String
         },
-    user:
+    sender:
         {
             type: String
         },
-    message:
+    text:
         {
             type: String
         }

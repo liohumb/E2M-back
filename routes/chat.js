@@ -16,10 +16,10 @@ router.post('/', async ( req, res ) => {
 })
 
 /* GET */
-router.get('/:id', async ( req, res) => {
+router.get('/:userId', async ( req, res) => {
     try {
         const chat = await Chat.find({
-            users: {$in: [req.params.id]}
+            users: {$in: [req.params.userId]}
         })
         res.status(200).json(chat)
     } catch (e) {

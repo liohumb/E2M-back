@@ -6,7 +6,7 @@ router.post('/', async ( req, res ) => {
     const newMessage = new Message(req.body)
 
     try {
-        const savedMessage= newMessage.save()
+        const savedMessage = await newMessage.save()
         res.status(200).json(savedMessage)
     } catch (e) {
         res.status(500).json({message: e.message})
@@ -14,10 +14,10 @@ router.post('/', async ( req, res ) => {
 })
 
 /* GET */
-router.get('/:id', async ( req, res) => {
+router.get('/:chatId', async ( req, res) => {
     try {
         const messages = await Message.find({
-            chat: req.params.id
+            chatId: req.params.chatId
         })
         res.status(200).json(messages)
     } catch (e) {

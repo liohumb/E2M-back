@@ -27,6 +27,11 @@ const ProductSchema = new mongoose.Schema( {
         {
             type: Array,
             default: []
+        },
+    sponsor:
+        {
+            type: Boolean,
+            default: false
         }
 }, { timestamps: true } )
 

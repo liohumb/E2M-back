@@ -93,10 +93,14 @@ router.post( '/inscription', async ( req, res ) => {
 router.post( '/connexion', async ( req, res ) => {
     try {
         const user = await User.findOne( { email: req.body.email } )
-        !user && res.status( 400 ).json( { message: 'Utilisateur inconnue' } )
+        if (!user) {
+            return res.status( 400 ).json( { message: 'Utilisateur inconnue' } )
+        }
 
         const isMatch = await bcrypt.compare( req.body.password, user.password )
-        !isMatch && res.status( 400 ).json( { message: 'Mot de passe incorrect' } )
+        if (!isMatch) {
+            return res.status( 400 ).json( { message: 'Mot de passe incorrect' } )
+        }
 
         const { password, ...others } = user._doc
 
@@ -105,5 +109,6 @@ router.post( '/connexion', async ( req, res ) => {
         res.status( 500 ).json( { e: e.message } )
     }
 } )
+
 
 module.exports = router
